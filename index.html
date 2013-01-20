@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html>
+  
+  <head>
+    <meta charset="UTF-8">
+    <title>wlsy.me</title>
+    <link rel="stylesheet" href="./static/layout.css" />
+    <script src="./static/jquery.js" type="text/javascript"></script>
+  </head>
+  
+  <body>
+    <div id="header">
+      <div class="hl">
+        <a id="logo" href="/">WLSY</a>
+        <a href="http://">标签</a>
+      </div>
+      <div class="hr">
+        <span id="J_Total">12/321</span>
+        <a href="http://">←</a>
+        <a href="http://">→</a>
+      </div>
+    </div>
+    <div id="slider">
+      <ul>
+        <li>
+          <div class="pw" id="J_PhotoWrapper" style="display:none">
+            <img id="J_Img" src="" alt="" style="display:none">
+          </div>
+          <div class="meta" id="J_Meta" style="display:none">
+            <p id="J_Metap"></p>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div id="footer">© 2013 wlsy版权所有 遵循
+      <a target=_blank href="https://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">BY-NC-SA 3.0</a></div>
+    <script src="./static/pizza.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      $('#slider').pizza({
+            });
+    </script>
+  </body>
+
+</html>
