@@ -8,7 +8,7 @@
 (function($, win) {
 
     /**
-     * pizza
+     * pizza core
      */
     $.fn.pizza = function(opts) {
 
@@ -16,7 +16,7 @@
             username: 'wlsy638',
             albumid: '5834489861667785793',
             picasaServer: 'picasaweb.google.com',
-            perPageResults: 2,
+            perPageResults: 10,
             papi: undefined
         };
 
@@ -49,9 +49,9 @@
          * @api private
          */
 
-        function picFillSize(thumbnail) {
+        function fillPicSize(thumbnail) {
             if (!$.isPlainObject(thumbnail) && thumbnail.width && thumbnail.height) {
-                return new Error("Invalid Param: picFillSize();");
+                return new Error("Invalid Param: fillPicSize();");
             }
 
             // header&footer&photo meta height
@@ -75,6 +75,9 @@
                 size.width = maxHeight * scale;
                 size.height = maxHeight;
             }
+
+            size.width = Math.round(size.width);
+            size.height= Math.round(size.height);
             return size;
         }
 
@@ -113,8 +116,6 @@
                 kind: 'photo',
                 page: 0
             }, config || {});
-
-            console.log(config);
 
             $.ajax({
                 url: opts.papi || 'https://' + opts.picasaServer + '/data/feed/api/user/' + opts.username + '/albumid/' + opts.albumid + '?kind=' + config.kind + '&alt=json&start-index=' + (config.page * opts.perPageResults + 1) + '&max-results=' + opts.perPageResults,
@@ -207,20 +208,23 @@
                 loading.show();
                 data.nowIndex = index;
 
+                //分页获取
                 if (data.nowIndex === data.photo.length && data.nowIndex < data.total) {
                     getPicasa({
                         page: arPhoto.photo.length / arPhoto.itemsPerPage 
                     }, function(data) { 
-                        console.log(data)
                         render(data);
                     });
-
                 } else {
                     render(data);
                 }
 
+                /**
+                 *  渲染生成图片
+                 */
+
                 function render(data) {
-                    var size = picFillSize(data.photo[index].size);
+                    var size = fillPicSize(data.photo[index].size);
                     photoWrapper.width(size.width).height(size.height).fadeIn('slow', function() {
                         img.attr('src', resolveSrc(size, data.photo[index].src));
 
@@ -229,14 +233,17 @@
                             nowIndex.fadeIn('fast');
                         });
 
-                        img.on('load', function() {
+                        img.one('load', function() {
                             loading.hide();
                             img.fadeIn('slow', function() {
                                 metap.html(data.photo[index].meta);
                                 metap.width(size.width - 20);
                                 meta.fadeIn('slow');
-
-                                //update index
+                                //preload next pic
+                                if (data.nowIndex < data.photo.length - 1) {
+                                    $('<img/>')[0].src = resolveSrc(size, data.photo[index + 1].src);
+                                    
+                                }
                             });
                         });
 
@@ -246,15 +253,12 @@
             },
 
             next: function(data, index) {
-
                 if (arguments.length === 1) {
                     index = data.nowIndex + 1 || 0;
                 }
-
                 if (data.nowIndex === data.total - 1) {
                     return;
                 }
-
                 this.hide();
                 this.show(data, index);
 
@@ -262,15 +266,12 @@
             },
 
             prev: function(data, index) {
-
                 if (arguments.length === 1) {
                     index = data.nowIndex - 1 || 0;
                 }
-
                 if (data.nowIndex === 0) {
                     return;
                 }
-
                 this.hide();
                 this.show(data, index);
 
