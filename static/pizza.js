@@ -16,7 +16,7 @@
             username: 'wlsy638',
             albumid: '5834489861667785793',
             picasaServer: 'picasaweb.google.com',
-            perPageResults: 10,
+            perPageResults: 2,
             papi: undefined
         };
 
