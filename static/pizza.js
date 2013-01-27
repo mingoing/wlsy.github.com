@@ -16,12 +16,12 @@
             username: 'wlsy638',
             albumid: '5834489861667785793',
             picasaServer: 'picasaweb.google.com',
-            perPageResults: 2,
+            perPageResults: 10,
             papi: undefined
         };
 
         // get from picasa
-        var arPhoto = {
+        var aPhoto = {
             photo: [],
             total: 0,
             nowIndex: 0
@@ -40,6 +40,7 @@
         var nowIndex = $('#J_PizzaNowIndex');
 
         opts = $.extend(defaultOpts, opts || {});
+        opts.papi = (opts.papi) ? opts.papi : 'https://' + opts.picasaServer + '/data/feed/api/user/' + opts.username;
 
         /**
          * 填充图片为最合适的大小  
@@ -77,29 +78,30 @@
             }
 
             size.width = Math.round(size.width);
-            size.height= Math.round(size.height);
+            size.height = Math.round(size.height);
             return size;
         }
 
         /**
          * formatDate  
          */
+        function formatDateTime(time) {
+            var date = new Date(Number(time));
+            if (date == "Invalid Date") {
+                return time;
+            }
 
-        function formatDateTime($dt) {
-            var $today = new Date(Number($dt));
-            $year = $today.getUTCFullYear();
-            if ($year < 1000) {
-                $year += 1900;
-            }
-            if ($today == "Invalid Date") {
-                return $dt;
-            } else {
-                if (($today.getUTCHours() === 0) && ($today.getUTCMinutes() === 0) && ($today.getUTCSeconds() === 0)) {
-                    return ($today.getUTCDate() + "-" + ($today.getUTCMonth() + 1) + "-" + $year);
-                } else {
-                    return ($today.getUTCDate() + "-" + ($today.getUTCMonth() + 1) + "-" + $year + " " + $today.getUTCHours() + ":" + ($today.getUTCMinutes() < 10 ? "0" + $today.getUTCMinutes() : $today.getUTCMinutes()));
-                }
-            }
+            var formatDate = {
+                year: (date.getUTCFullYear() < 1000) ? date.getUTCFullYear() += 1900 : date.getUTCFullYear(),
+                month: date.getUTCMonth() + 1,
+                day: date.getUTCDate(),
+                hours: date.getUTCHours(),
+                minutes: (date.getUTCMinutes() < 10) ? "0" + (date.getUTCMinutes()) : (date.getUTCMinutes()),
+                seconds: (date.getUTCSeconds() < 10) ? "0" + date.getUTCSeconds() : date.getUTCSeconds()
+            };
+
+            return formatDate.year + '年' + formatDate.month + '月' + formatDate.day + '日 ' + ((formatDate.hours > 12) ? '下午' + (formatDate.hours - 12) + '点' : '上午' + formatDate.hours + '点') + formatDate.minutes + '分' + formatDate.seconds + '秒';
+
         }
 
         /**
@@ -114,14 +116,30 @@
 
             config = $.extend({
                 kind: 'photo',
+                photoid: undefined,
                 page: 0
             }, config || {});
 
+            var query = '?kind=' + config.kind + '&alt=json&start-index=' + (config.page * opts.perPageResults + 1) + '&max-results=' + opts.perPageResults;
+
+            var url = config.photoid ? opts.papi + '/photoid/' + config.photoid + '?alt=json' : opts.papi + '/albumid/' + opts.albumid + query;
+
             $.ajax({
-                url: opts.papi || 'https://' + opts.picasaServer + '/data/feed/api/user/' + opts.username + '/albumid/' + opts.albumid + '?kind=' + config.kind + '&alt=json&start-index=' + (config.page * opts.perPageResults + 1) + '&max-results=' + opts.perPageResults,
+                url: url,
                 dataType: 'jsonp',
                 success: function(data) {
+
+                    // 统一单图片请求格式跟专辑一致
+                    if (config.photoid) {
+                        data.feed.summary = data.feed.subtitle;
+                        data.feed.content = {
+                            src: data.feed.media$group.media$content[0].url
+                        };
+                        data.feed.entry = [data.feed];
+                    }
+
                     $.each(data.feed.entry, function(index, el) {
+                        console.log(el);
                         var p = {};
                         p.id = el.gphoto$id.$t;
                         p.size = {
@@ -131,17 +149,16 @@
                         p.time = el.exif$tags.exif$time.$t;
                         p.meta = el.summary.$t;
                         p.tag = el.media$group.media$keywords.$t;
-                        //photo.size = el.gphoto$size;
                         p.src = el.content.src;
 
-                        arPhoto.photo.push(p);
+                        aPhoto.photo.push(p);
                     });
 
-                    arPhoto.total = data.feed.openSearch$totalResults.$t;
-                    arPhoto.startIndex = data.feed.openSearch$startIndex.$t;
-                    arPhoto.itemsPerPage = data.feed.openSearch$itemsPerPage.$t;
+                    aPhoto.total = data.feed.openSearch$totalResults.$t;
+                    aPhoto.startIndex = data.feed.openSearch$startIndex.$t;
+                    aPhoto.itemsPerPage = data.feed.openSearch$itemsPerPage.$t;
 
-                    next.call(null, arPhoto);
+                    next.call(null, aPhoto);
                 }
             });
         }
@@ -170,12 +187,12 @@
          */
 
         function controlDisabled() {
-            switch (arPhoto.nowIndex) {
+            switch (aPhoto.nowIndex) {
             case 0:
                 photoPrev.addClass('pizzaControlDisabled');
                 break;
 
-            case arPhoto.total - 1:
+            case aPhoto.total - 1:
                 photoNext.addClass('pizzaControlDisabled');
                 break;
 
@@ -190,12 +207,29 @@
          * onload   
          */
 
-        function init(data) {
+        function init() {
             $("<style> .pizzaControlDisabled{ opacity: 0.6; cursor: not-allowed;} </style>").appendTo("head");
-            total.html(data.total);
-            nowIndex.html(data.index);
-            index.fadeIn();
-            controlDisabled();
+
+            if (win.location.hash !== '') {
+                photoid = window.location.hash.substr(1);
+                console.log(photoid)
+                getPicasa({
+                    photoid: photoid
+                }, function(data) {
+                    photo.show(data);
+                    index.html('<a href="/">返回</a>');
+                    index.fadeIn();
+                });
+            } else {
+                getPicasa(function(data) {
+                    photo.show(data);
+                    total.html(data.total);
+                    nowIndex.html(data.index);
+                    index.fadeIn();
+                    controlDisabled();
+                });
+            }
+
         }
 
         var photo = {
@@ -211,8 +245,8 @@
                 //分页获取
                 if (data.nowIndex === data.photo.length && data.nowIndex < data.total) {
                     getPicasa({
-                        page: arPhoto.photo.length / arPhoto.itemsPerPage 
-                    }, function(data) { 
+                        page: aPhoto.photo.length / aPhoto.itemsPerPage
+                    }, function(data) {
                         render(data);
                     });
                 } else {
@@ -225,24 +259,27 @@
 
                 function render(data) {
                     var size = fillPicSize(data.photo[index].size);
+                    var photo = data.photo[index];
                     photoWrapper.width(size.width).height(size.height).fadeIn('slow', function() {
-                        img.attr('src', resolveSrc(size, data.photo[index].src));
+                        img.attr('src', resolveSrc(size, photo.src));
 
                         nowIndex.fadeOut('fast', function() {
-                            nowIndex.html(arPhoto.nowIndex + 1);
+                            nowIndex.html(aPhoto.nowIndex + 1);
                             nowIndex.fadeIn('fast');
                         });
 
                         img.one('load', function() {
                             loading.hide();
+                            window.location.hash = photo.id;
                             img.fadeIn('slow', function() {
-                                metap.html(data.photo[index].meta);
+                                metap.html(photo.meta + '<span class="pizzaTg">——定格于' + formatDateTime(photo.time) + ' 在' + photo.tag + '</span>');
                                 metap.width(size.width - 20);
                                 meta.fadeIn('slow');
+
                                 //preload next pic
                                 if (data.nowIndex < data.photo.length - 1) {
                                     $('<img/>')[0].src = resolveSrc(size, data.photo[index + 1].src);
-                                    
+
                                 }
                             });
                         });
@@ -286,18 +323,15 @@
 
         photoNext.on('click', function(ev) {
             ev.preventDefault();
-            photo.next(arPhoto);
+            photo.next(aPhoto);
         });
 
         photoPrev.on('click', function(ev) {
             ev.preventDefault();
-            photo.prev(arPhoto);
+            photo.prev(aPhoto);
         });
 
-        getPicasa(function(data) {
-            photo.show(data);
-            init(data);
-        });
+        init();
 
     };
 }(jQuery, window));

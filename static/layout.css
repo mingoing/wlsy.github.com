@@ -42,17 +42,19 @@ body {
     top: 0;
 }
 #header .hr > span {
-    color: #999;
+    color: #ddd;
     padding: 0 5px;
 }
 #header .hr a {
     background: #232323;
     display: inline-block;
     padding: 1px 11px;
+    border: 1px solid #333;
     -webkit-border-radius: 3px;
     -webkit-box-shadow: inset 0 1px 0 rgba(101, 101, 101, .1);
     -moz-box-shadow: inset 0 1px 0 rgba(101, 101, 101, .1);
     box-shadow: inset 0 1px 0 rgba(101, 101, 101, .1);
+    
 }
 #header .hr a:hover {
     background: #333;
@@ -99,6 +101,11 @@ body {
     text-align: center;
 }
 
+.pizzaTg {
+    padding-left: 20px;
+    color: #666;
+    font-size: 12px;
+}
 #footer {
     position: fixed;
     bottom: 0;
