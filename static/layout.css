@@ -1,4 +1,7 @@
 /*main*/
+.hide {
+    display: none;
+}
 body {
     margin: 0;
     font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -7,18 +10,18 @@ body {
     color: #f2f2f2;
     background: #111;
 }
+a {
+    text-decoration: none;
+    color: rgba(255, 255, 255 ,.8);
+    display: inline-block;
+}
 #header {
-    position: fixed;
+    position: absolute;
     top: 10px;
     left: 0;
     z-index: 1;
     width: 100%;
     height: 22px;
-}
-#header a {
-    text-decoration: none;
-    color: rgba(255, 255, 255, .8);
-    display: inline-block;
 }
 #header a:hover {
     color: rgb(255, 255, 255);
@@ -60,6 +63,18 @@ body {
     background: #333;
 }
 
+#tag a {
+    font-size: 12px;
+    background: #333;
+    padding: 0 8px;
+    -webkit-border-radius: 2px;
+}
+#tag a b {
+    display: none;
+}
+#tag a:hover b {
+    display: inline-block;
+}
 .slider {
     position: fixed;
     top: 40px;
@@ -110,7 +125,7 @@ body {
     position: fixed;
     bottom: 0;
     right: 0;
-    padding: 10px 20px;
+    padding: 10px 20px 10px 0 ;
     color: #333;
     font-size: 12px;
     text-align: right;
@@ -118,4 +133,37 @@ body {
 #footer a {
     color: #333;
     text-decoration: none;
+}
+#tags {
+    position: absolute;
+    top: 40px;
+    left: 20px;
+    width: 220px;
+    background: rgba(0,0,0,.8);
+    padding: 10px;
+    border: 1px solid #333;
+    -webkit-box-shadow: 0 0 5px #000;
+    -moz-box-shadow: 0 0 5px #000;
+    -ms-box-shadow: 0 0 5px #000;
+    box-shadow: 0 0 5px #000;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    border-radius: 3px;
+    font-size: 12px;
+    min-height: 60px;
+}
+#tags a {
+    padding: 5px;
+}
+#tags a:hover {
+    color: rgb(255, 255, 255);
+}
+#tags::before {
+    content: "▲";
+    color: #333;
+    z-index: 30;
+    position: absolute;
+    top: -15px;
+    left: 73px;
 }

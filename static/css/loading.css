@@ -37,35 +37,35 @@
     -o-border-radius: 6px;
     border-radius: 6px;
 }
-.loading #wBall_1 {
+#wBall_1 {
     -moz-animation-delay: 1.56s;
     -webkit-animation-delay: 1.56s;
     -ms-animation-delay: 1.56s;
     -o-animation-delay: 1.56s;
     animation-delay: 1.56s;
 }
-.loading #wBall_2 {
+#wBall_2 {
     -moz-animation-delay: 0.31s;
     -webkit-animation-delay: 0.31s;
     -ms-animation-delay: 0.31s;
     -o-animation-delay: 0.31s;
     animation-delay: 0.31s;
 }
-.loading #wBall_3 {
+#wBall_3 {
     -moz-animation-delay: 0.62s;
     -webkit-animation-delay: 0.62s;
     -ms-animation-delay: 0.62s;
     -o-animation-delay: 0.62s;
     animation-delay: 0.62s;
 }
-.loading #wBall_4 {
+#wBall_4 {
     -moz-animation-delay: 0.94s;
     -webkit-animation-delay: 0.94s;
     -ms-animation-delay: 0.94s;
     -o-animation-delay: 0.94s;
     animation-delay: 0.94s;
 }
-.loading #wBall_5 {
+#wBall_5 {
     -moz-animation-delay: 1.25s;
     -webkit-animation-delay: 1.25s;
     -ms-animation-delay: 1.25s;

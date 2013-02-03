@@ -3,26 +3,30 @@
   
   <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,minimum-scale=1.0"/>
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0" />
     <title>wlsy.me</title>
     <link rel="stylesheet" href="./static/css/reset.css" />
     <link rel="stylesheet" href="./static/css/loading.css" />
     <link rel="stylesheet" href="./static/layout.css" />
-    <script src="./static/jquery.js" type="text/javascript"></script>
   </head>
   
   <body>
     <div id="header">
       <div class="hl">
         <a id="logo" href="/">WLSY</a>
-        <a href="http://">标签</a>
+        <a id="J_Tags" href="#">标签</a>
+        <span id="tag" class="t hide">
+        </span>
       </div>
       <div class="hr" id="J_PizzaIndex" style="display:none">
-          <span><span id="J_PizzaNowIndex"></span>/<span id="J_PizzaTotalIndex"></span></span>
-        <a id="J_PizzaPrev" href="http://">←</a>
-        <a id="J_PizzaNext" href="http://">→</a>
+        <span>
+          <span id="J_PizzaNowIndex"></span>/<span id="J_PizzaTotalIndex"></span>
+        </span>
+        <a id="J_PizzaPrev" href="#">←</a>
+        <a id="J_PizzaNext" href="#">→</a>
       </div>
     </div>
+
     <div id="J_PizzaSlider" class="slider">
       <ul>
         <li>
@@ -35,8 +39,15 @@
         </li>
       </ul>
     </div>
-    <div id="footer">  © wlsy <a target=_blank href="https://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">by-nc-sa 3.0</a> | design for retina display | <a target=_blank href="https://github.com/wlsy/wlsy.github.com">github</a>
+
+    <div id="tags" style="display:none">
+        loading...
     </div>
+    <div id="footer">© wlsy
+      <a target=_blank href="https://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh">by-nc-sa 3.0</a> | design for retina display |
+      <a target=_blank href="https://github.com/wlsy/wlsy.github.com">github</a>
+    </div>
+
     <div id="J_PizzaLoading" class="loading">
       <div class="wBall" id="wBall_1">
         <div class="wInnerBall"></div>
@@ -54,12 +65,14 @@
         <div class="wInnerBall"></div>
       </div>
     </div>
+
+    <script src="./static/jquery.js" type="text/javascript"></script>
     <script src="./static/pizza.js" type="text/javascript"></script>
     <script type="text/javascript">
-      $('#slider').pizza({
-            });
+      $.pizza({papi:'http://papi.wlsy.me', picServer: 'ggpht'});
     </script>
-
+    <script type="text/javascript">
+    </script>
   </body>
 
 </html>
