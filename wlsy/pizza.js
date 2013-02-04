@@ -301,7 +301,6 @@
                                 }
                             });
                         });
-
                     });
                 }
             },
@@ -378,16 +377,12 @@
                 });
             } else {
                 getPicasa(function(data) {
-                    photo.show(data);
-                    total.html(data.total);
-                    nowIndex.html(data.index);
-                    index.fadeIn();
-                    controlDisabled();
+                    switchShow(data);
                 });
             }
-
         }
 
+        //go, now
         init();
 
         function switchShow(data) {

@@ -92,8 +92,8 @@ textarea {
 }
 .loading .wBall {
     position: absolute;
-    width: 48px;
-    height: 48px;
+    width: 28px;
+    height: 28px;
     opacity: 0;
     -moz-transform: rotate(225deg);
     -moz-animation: orbit 7.15s infinite;
