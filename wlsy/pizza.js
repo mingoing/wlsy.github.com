@@ -282,6 +282,10 @@
                         img.one('load', function() {
                             loading.hide();
                             window.location.hash = photo.id;
+
+                            //google analytics
+                            _gaq.push(['_trackPageview', '/' + photo.id]);
+
                             img.fadeIn('slow', function() {
                                 if (photo.time) {
                                     metap.html(photo.meta + '<span class="pizzaTg">——定格于' + formatDateTime(photo.time) + ' 在' + photo.tag + '</span>');
