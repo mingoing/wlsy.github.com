@@ -186,7 +186,8 @@
             var last = s[s.length - 1];
             s[s.length - 1] = 's' + width;
             s.push(last);
-            return opts.picServer ? s.join('/').replace('googleusercontent', opts.picServer) : s.json('/');
+            var newSrc = opts.picServer ? s.join('/').replace('googleusercontent', opts.picServer) : s.join('/');
+            return newSrc;
         }
 
         /**
@@ -318,6 +319,19 @@
             photo.prev(aPhoto);
         });
 
+        //key control
+        $(document).keydown(function(e){
+            if (e.keyCode == 37 ||e.keyCode == 38 ) { 
+                photo.prev(aPhoto);
+                return false;
+            }
+            if (e.keyCode == 39 ||e.keyCode == 40 ) { 
+                photo.next(aPhoto);
+                return false;
+            }
+
+        });
+
         /**
          * onload   
          */
@@ -383,13 +397,15 @@
             $('#tags').toggle();
             $('#tag').fadeOut();
             switchHide();
-            getPicasa({ tag: tag }, function(data) {
+            getPicasa({
+                tag: tag
+            }, function(data) {
                 switchShow(data);
                 $('#tag').html('<a href="#">' + tag + '<b>⊗</b></a>').fadeIn();
             });
         });
 
-        $('body').on('click', '#tag a', function(ev){
+        $('body').on('click', '#tag a', function(ev) {
             ev.preventDefault();
             $('#tag').fadeOut();
             switchHide();

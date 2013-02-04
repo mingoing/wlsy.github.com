@@ -96,14 +96,14 @@ $(document).ready(function() {
     });
 
     //get mousewheel function
-    $("#slider ul").mousewheel(function(event, delta) {
+    $("#slider ul").on('mousewheel', function(event, delta) {
         if (delta > 0) {
             goBack();
             event.stopPropagation();
             event.preventDefault();
         }
     });
-    $("#slider ul").mousewheel(function(event, delta) {
+    $("#slider ul").on('mousewheel', function(event, delta) {
         if (delta < 0) {
             goNext();
             event.stopPropagation();
