@@ -14,7 +14,7 @@
 
         var defaultOpts = {
             username: 'wlsy638',
-            albumid: '5834489861667785793',
+            albumid: '5841401125676210721',
             picasaServer: 'picasaweb.google.com',
             picServer: undefined,
             perPageResults: 10,
