@@ -210,7 +210,7 @@
             var last = s[s.length - 1];
             s[s.length - 1] = 's' + width;
             s.push(last);
-            var newSrc = opts.picServer ? s.join('/').replace('https', opts.picServer[0]).replace('googleusercontent', opts.picServer[1]) : s.join('/');
+            var newSrc = opts.picServer ? s.join('/').replace('https', opts.picServer[0]).replace('googleusercontent.com', opts.picServer[1]) : s.join('/');
             return newSrc;
         }
 
